@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drink Evenement | Is het buiten drinkweer?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0b1220 0%, #1e3a5f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            background: #fef3c7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 40px;
+        }
+        h1 {
+            color: #111827;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        p {
+            color: #6b7280;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .btn-primary {
+            background: #f59e0b;
+            color: #0f172a;
+        }
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        .divider::before { margin-right: 12px; }
+        .divider::after { margin-left: 12px; }
+        .app-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .app-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .app-text {
+            text-align: left;
+        }
+        .app-name {
+            color: #111827;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .app-desc {
+            color: #6b7280;
+            font-size: 12px;
+        }
+        .not-found {
+            display: none;
+        }
+        .not-found .icon {
+            background: #fee2e2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Event invitation content (shown when URL is /event/...) -->
+    <div class="container event-content" id="eventContent">
+        <div class="icon">🍺</div>
+        <h1>Je bent uitgenodigd!</h1>
+        <p>Iemand heeft je uitgenodigd voor een drink evenement via de Is het buiten drinkweer app.</p>
+
+        <a href="#" class="btn btn-primary" id="openAppBtn">
+            Open in de app
+        </a>
+
+        <div class="divider">of</div>
+
+        <a href="#" class="btn btn-secondary" id="downloadBtn">
+            Download de app
+        </a>
+
+        <div class="app-info">
+            <div class="app-icon">🍻</div>
+            <div class="app-text">
+                <div class="app-name">Is het buiten drinkweer?</div>
+                <div class="app-desc">Check het weer voor je terrasje</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Not found content (shown for other 404s) -->
+    <div class="container not-found" id="notFoundContent">
+        <div class="icon">🔍</div>
+        <h1>Pagina niet gevonden</h1>
+        <p>De pagina die je zoekt bestaat niet of is verplaatst.</p>
+
+        <a href="/" class="btn btn-primary">
+            Ga naar home
+        </a>
+    </div>
+
+    <script>
+        // Get event ID from URL path
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const isEventUrl = pathParts[0] === 'event' && pathParts.length >= 2;
+        const eventId = isEventUrl ? pathParts[1] : null;
+
+        const eventContent = document.getElementById('eventContent');
+        const notFoundContent = document.getElementById('notFoundContent');
+        const openAppBtn = document.getElementById('openAppBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        if (isEventUrl && eventId) {
+            // Show event content
+            eventContent.style.display = 'block';
+            notFoundContent.style.display = 'none';
+
+            // Set up the deep link URL
+            const deepLink = `ishetbuitendrinkweermobile://event/${eventId}`;
+            openAppBtn.href = deepLink;
+
+            // Detect platform for download button
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isAndroid = /Android/i.test(navigator.userAgent);
+
+            if (isIOS) {
+                // TODO: Replace with actual App Store URL when published
+                downloadBtn.href = '#';
+                downloadBtn.textContent = 'Download voor iOS';
+            } else if (isAndroid) {
+                downloadBtn.href = 'https://play.google.com/store/apps/details?id=nl.ishetbuitendrinkweer.app';
+                downloadBtn.textContent = 'Download voor Android';
+            } else {
+                downloadBtn.href = '#';
+                downloadBtn.textContent = 'Download de app';
+            }
+
+            // Try to open the app automatically on mobile
+            if (isIOS || isAndroid) {
+                // Small delay to ensure the page is loaded
+                setTimeout(() => {
+                    window.location.href = deepLink;
+                }, 100);
+            }
+        } else {
+            // Show 404 content
+            eventContent.style.display = 'none';
+            notFoundContent.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

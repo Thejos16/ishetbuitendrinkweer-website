@@ -1,0 +1,9 @@
+# GitHub Pages Jekyll configuration
+# Include dotfiles in the build
+include:
+  - .well-known
+
+# Exclude unnecessary files
+exclude:
+  - README.md
+  - LICENSE

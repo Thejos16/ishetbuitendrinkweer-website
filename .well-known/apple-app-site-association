@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "X97V6YP4N7.nl.ishetbuitendrinkweer.app",
+        "paths": ["/event/*"]
+      }
+    ]
+  }
+}
