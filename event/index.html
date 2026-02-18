@@ -127,8 +127,8 @@
     </style>
 </head>
 <body>
-    <!-- Event invitation content (shown when URL is /event/...) -->
-    <div class="container event-content" id="eventContent">
+    <!-- Event invitation content -->
+    <div class="container" id="eventContent" style="display:none;">
         <div class="icon">🍺</div>
         <h1>Je bent uitgenodigd!</h1>
         <p>Iemand heeft je uitgenodigd voor een drink evenement via de Is het buiten drinkweer app.</p>
@@ -152,37 +152,31 @@
         </div>
     </div>
 
-    <!-- Not found content (shown for other 404s) -->
-    <div class="container not-found" id="notFoundContent">
-        <div class="icon">🔍</div>
-        <h1>Pagina niet gevonden</h1>
-        <p>De pagina die je zoekt bestaat niet of is verplaatst.</p>
+    <!-- Not found content -->
+    <div class="container" id="notFoundContent" style="display:none;">
+        <div class="icon not-found" style="background:#fee2e2;">🔍</div>
+        <h1>Uitnodiging niet gevonden</h1>
+        <p>Deze uitnodigingslink is ongeldig of verlopen.</p>
 
-        <a href="/" class="btn btn-primary">
-            Ga naar home
+        <a href="https://apps.apple.com/app/id6757765938" class="btn btn-primary">
+            Download de app
         </a>
     </div>
 
     <script>
-        // Get event ID from URL path
-        const pathParts = window.location.pathname.split('/').filter(Boolean);
-        const isEventUrl = pathParts[0] === 'event' && pathParts.length >= 2;
-        const eventId = isEventUrl ? pathParts[1] : null;
+        const params = new URLSearchParams(window.location.search);
+        const eventId = params.get('id');
 
         const eventContent = document.getElementById('eventContent');
         const notFoundContent = document.getElementById('notFoundContent');
         const openAppBtn = document.getElementById('openAppBtn');
         const downloadBtn = document.getElementById('downloadBtn');
 
-        if (isEventUrl && eventId) {
-            // Show event content
+        if (eventId) {
             eventContent.style.display = 'block';
-            notFoundContent.style.display = 'none';
 
-            // Set up the deep link URL
             const deepLink = `ishetbuitendrinkweermobile://event/${eventId}`;
 
-            // Detect platform for download button
             const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             const isAndroid = /Android/i.test(navigator.userAgent);
 
@@ -194,16 +188,14 @@
                 storeUrl = 'https://play.google.com/store/apps/details?id=nl.ishetbuitendrinkweer.app';
                 downloadBtn.textContent = 'Download voor Android';
             } else {
-                storeUrl = '#';
+                storeUrl = 'https://apps.apple.com/app/id6757765938';
                 downloadBtn.textContent = 'Download de app';
             }
             downloadBtn.href = storeUrl;
 
-            // Open app button: try deep link, fall back to store after 2.5s if app didn't open
             openAppBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 window.location.href = deepLink;
-                // If the app is not installed the page stays visible; redirect to store
                 setTimeout(function() {
                     if (!document.hidden) {
                         window.location.href = storeUrl;
@@ -212,8 +204,6 @@
             });
             openAppBtn.href = deepLink;
         } else {
-            // Show 404 content
-            eventContent.style.display = 'none';
             notFoundContent.style.display = 'block';
         }
     </script>
