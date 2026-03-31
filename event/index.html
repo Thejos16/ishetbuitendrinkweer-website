@@ -164,8 +164,18 @@
     </div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const eventId = params.get('id');
+        // Parse event ID from path (/event/EVENT_ID) or legacy query param (?id=EVENT_ID)
+        function getEventId() {
+            const pathParts = window.location.pathname.split('/');
+            const eventSegmentIndex = pathParts.indexOf('event');
+            if (eventSegmentIndex !== -1 && pathParts[eventSegmentIndex + 1]) {
+                return pathParts[eventSegmentIndex + 1];
+            }
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        const eventId = getEventId();
 
         const eventContent = document.getElementById('eventContent');
         const notFoundContent = document.getElementById('notFoundContent');
@@ -184,6 +194,16 @@
             if (isIOS) {
                 storeUrl = 'https://apps.apple.com/app/id6757765938';
                 downloadBtn.textContent = 'Download voor iOS';
+
+                // Add Smart App Banner so iOS shows a native prompt in Safari
+                const banner = document.createElement('meta');
+                banner.name = 'apple-itunes-app';
+                banner.content = `app-id=6757765938, app-argument=${deepLink}`;
+                document.head.appendChild(banner);
+
+                // Auto-redirect attempt: try to open the app immediately.
+                // If the app is installed iOS will switch to it; if not, nothing happens.
+                window.location = deepLink;
             } else if (isAndroid) {
                 storeUrl = 'https://play.google.com/store/apps/details?id=nl.ishetbuitendrinkweer.app';
                 downloadBtn.textContent = 'Download voor Android';
@@ -191,8 +211,8 @@
                 storeUrl = 'https://apps.apple.com/app/id6757765938';
                 downloadBtn.textContent = 'Download de app';
             }
-            downloadBtn.href = storeUrl;
 
+            downloadBtn.href = storeUrl;
             openAppBtn.href = deepLink;
         } else {
             notFoundContent.style.display = 'block';

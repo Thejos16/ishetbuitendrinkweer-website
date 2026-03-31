@@ -1,10 +1,14 @@
 {
   "applinks": {
-    "apps": [],
     "details": [
       {
-        "appID": "49G68A6CDK.nl.ishetbuitendrinkweer.app",
-        "paths": ["/event/*"]
+        "appIDs": ["49G68A6CDK.nl.ishetbuitendrinkweer.app"],
+        "components": [
+          {
+            "/": "/event/*",
+            "comment": "Event invite URLs"
+          }
+        ]
       }
     ]
   }
