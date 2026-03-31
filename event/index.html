@@ -193,21 +193,7 @@
             }
             downloadBtn.href = storeUrl;
 
-            openAppBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = deepLink;
-                setTimeout(function() {
-                    if (!document.hidden) {
-                        window.location.href = storeUrl;
-                    }
-                }, 2500);
-            });
             openAppBtn.href = deepLink;
-
-            // Probeer de app direct te openen als iOS Safari de pagina laadt
-            if (isIOS) {
-                window.location.href = deepLink;
-            }
         } else {
             notFoundContent.style.display = 'block';
         }
