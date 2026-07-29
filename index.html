@@ -73,6 +73,15 @@
             background: #e5e7eb;
             color: #374151;
         }
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
         .features {
             text-align: left;
             margin: 24px 0;
@@ -124,17 +133,18 @@
             Download voor iOS
         </a>
         <a href="#" class="btn btn-secondary" id="playStoreBtn">
-            Download voor Android
+            Binnenkort beschikbaar voor Android
         </a>
     </div>
 
     <script>
-        // Detect platform and show appropriate button
-        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const isAndroid = /Android/i.test(navigator.userAgent);
-
         document.getElementById('appStoreBtn').href = 'https://apps.apple.com/app/id6757765938';
-        document.getElementById('playStoreBtn').href = 'https://play.google.com/store/apps/details?id=nl.ishetbuitendrinkweer.app';
+
+        // Not published on Play Store yet — keep the button visible but disabled.
+        const playStoreBtn = document.getElementById('playStoreBtn');
+        playStoreBtn.removeAttribute('href');
+        playStoreBtn.classList.add('btn-disabled');
+        playStoreBtn.setAttribute('aria-disabled', 'true');
     </script>
 </body>
 </html>
